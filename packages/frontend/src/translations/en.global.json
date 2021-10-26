@@ -1368,7 +1368,12 @@
         "wasTransferredSuccessfully": "was transferred successfully",
         "authorizationRequestSuccessful": "Authorization request successful",
         "transferring": "Transferring",
-        "authorizing": "Authorizing"
+        "authorizing": "Authorizing",
+        "retry": {
+            "title": "Insufficient Network Fee",
+            "text": "The default network fee was not enough to cover the cost of your transaction.<br/><br/>You may resubmit the transaction to have its fee limit automatically increased.",
+            "link": "What is the fee limit?"
+        }
     },
 
     "availableBalanceInfo": "Your spendable NEAR balance excluding funds locked or staked. <a href='/profile'>View Balance Breakdown →</a>",
