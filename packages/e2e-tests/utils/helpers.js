@@ -42,6 +42,16 @@ function bnComparator(a, b) {
     }
 }
 
+function bnComparator(a, b) {
+    if(a.lt(b)) {
+        return -1
+    } else if(a.eq(b)) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
 module.exports = {
     generateNUniqueRandomNumbersInRange,
     getKeyPairFromSeedPhrase,
