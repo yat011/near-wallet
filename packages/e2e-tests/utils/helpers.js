@@ -57,6 +57,10 @@ const bnSaturatingSub = (a, b) => {
     return res.gte(new BN(0)) ? res : new BN(0);
 };
 
+const bnIsWithinUncertainty = (uncertaintyBn, bn1, bn2) => {
+    return bn1.sub(bn2).abs().lt(uncertaintyBn.abs())
+}
+
 module.exports = {
     generateNUniqueRandomNumbersInRange,
     getKeyPairFromSeedPhrase,
@@ -65,5 +69,6 @@ module.exports = {
     getWorkerAccountId,
     bnComparator,
     getWorkerAccountRegex,
-    bnSaturatingSub
+    bnSaturatingSub,
+    bnIsWithinUncertainty
 };
