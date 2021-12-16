@@ -370,7 +370,7 @@ const FungibleTokens = ({ balance, tokensLoader, fungibleTokens }) => {
     let wNearToken = null;
 
     if (wNearTokenIndex >= 0) {
-        fungibleTokens = moveWNearHigherInTokenList({ inputList: fungibleTokens, wNearPos: wNearTokenIndex });
+        fungibleTokens = moveWNearHigherInTokenList({ fungibleTokens, wNearPos: wNearTokenIndex });
         wNearToken = fungibleTokens[1];
     }
 
@@ -384,7 +384,7 @@ const FungibleTokens = ({ balance, tokensLoader, fungibleTokens }) => {
         })();
     }, []);
 
-    if (availableBalanceIsZero && unwrapFees !== null) {
+    if (availableBalanceIsZero && unwrapFees != null) {
         const haveEnoughWNear = wNearToken?.balance ? (new BN(wNearToken.balance)).gte(new BN(MIN_BALANCE_FOR_GAS)) : false;
         const haveEnoughGasFeeForUnwrap = (new BN(balance?.available)).gte(new BN(unwrapFees));
         showUnwrapNear = availableBalanceIsZero && haveEnoughWNear && haveEnoughGasFeeForUnwrap;
