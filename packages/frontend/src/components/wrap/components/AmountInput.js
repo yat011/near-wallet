@@ -70,7 +70,7 @@ const InputIconContainer = styled.div`
 export default function AmountInput({
     value, onChange, onSetMaxAmount, valid, disabled,
     tokenInfo, availableClick = null, inputTestId,
-    amountHeader, autoFocus
+    amountHeader, autoFocus, amountTestId
 
 }) {
     let validationStatus;
@@ -111,7 +111,7 @@ export default function AmountInput({
                     step='any'
                     value={value}
                     onChange={e => onChange(e)}
-                    className='stake-amount-input'
+                    className='wrap-amount-input'
                     data-test-id={inputTestId}
                 />
                 <div className='icon'>
@@ -135,6 +135,7 @@ export default function AmountInput({
                     amount={tokenInfo.balance}
                     decimals={tokenInfo.decimals}
                     showFiatAmountForNonNearToken={false}
+                    testId={amountTestId}
                 />
             </div>
         </Container>

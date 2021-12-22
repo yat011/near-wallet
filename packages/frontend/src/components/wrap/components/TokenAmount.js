@@ -70,9 +70,9 @@ const showFullAmount = (amount, decimals, symbol) =>
         ? `${formatTokenAmount(amount, decimals, decimals)} ${symbol}`
         : '';
 
-const TokenAmount = ({ token: { balance, decimals, symbol }, withSymbol = false, className, showFiatAmount = true }) => (
-    <StyledContainer className={className} title={showFullAmount(balance, decimals, symbol)}>
-        <div>
+const TokenAmount = ({ token: { balance, decimals, symbol }, testId, withSymbol = false, className, showFiatAmount = true }) => (
+    <StyledContainer className={className} title={showFullAmount(balance, decimals, symbol)} data-test-id={testId} >
+        <div >
             {balance
                 ? (
                     <>

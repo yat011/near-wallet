@@ -67,11 +67,12 @@ const EnterAmount = ({
                 disabled={false}
                 autoFocus={!isMobile}
                 inputTestId="wrappingFromAmountInput"
+                amountTestId="wrappingFromAmountInputView"
                 amountHeader={"wrapNear.enterAmount.payAmount"}
 
             />
 
-            <div className={"swap_wrap"}>
+            <div className={"swap_wrap"} data-test-id={"swapWrappingTokenButton"}>
                 <span onClick={onSwapClick}>
                     <SwapArrow />
                 </span>
@@ -86,6 +87,7 @@ const EnterAmount = ({
                 disabled={true}
                 autoFocus={false}
                 inputTestId="wrappingToAmountInput"
+                amountTestId="wrappingToAmountInputView"
                 amountHeader={"wrapNear.enterAmount.receiveAmount"}
             />
 

@@ -8,7 +8,8 @@ const RawTokenAmount = ({
     amount,
     decimals,
     withSymbol = true,
-    showFiatAmountForNonNearToken
+    showFiatAmountForNonNearToken,
+    testId,
 }) => {
     if (symbol !== "NEAR") {
         return (
@@ -16,11 +17,13 @@ const RawTokenAmount = ({
                 token={{ symbol, decimals, balance: amount }}
                 withSymbol={withSymbol}
                 showFiatAmount={showFiatAmountForNonNearToken}
+                testId={testId}
             />
         );
     } else {
         return <Balance amount={amount} symbol={withSymbol ? 'near' : false}
             showBalanceInUSD={showFiatAmountForNonNearToken}
+            data-test-id={testId}
         />;
     }
 };
