@@ -63,7 +63,7 @@ export function WrapNearContainerWrapper({ match }) {
 
                 const id = Mixpanel.get_distinct_id();
                 Mixpanel.identify(id);
-                Mixpanel.people.set({ last_send_token: new Date().toString() });
+                Mixpanel.people.set({ last_wrap_token: new Date().toString() });
             },
             (e) => {
                 dispatch(showCustomAlert({

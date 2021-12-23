@@ -79,7 +79,7 @@ export default function AmountInput({
     } else {
         validationStatus = '#ff585d';
     }
-    const balanceClassName = availableClick !== null ? 'available-balance clickable-balance' : 'available-balance';
+    const clickableClassName = availableClick !== null ? 'clickable-balance' : '';
 
     return (
 
@@ -120,7 +120,7 @@ export default function AmountInput({
                 </div>
             </InputIconContainer>
 
-            <div className={balanceClassName} onClick={availableClick}>
+            <div className={"available-balance"}>
                 <span>
                     <Translate id={`wrapNear.enterAmount.availableBalance`} />
                     {
@@ -130,13 +130,15 @@ export default function AmountInput({
                     }
 
                 </span>
-                <RawTokenAmount
-                    symbol={tokenInfo.symbol}
-                    amount={tokenInfo.balance}
-                    decimals={tokenInfo.decimals}
-                    showFiatAmountForNonNearToken={false}
-                    testId={amountTestId}
-                />
+                <div onClick={availableClick} className={clickableClassName}>
+                    <RawTokenAmount
+                        symbol={tokenInfo.symbol}
+                        amount={tokenInfo.balance}
+                        decimals={tokenInfo.decimals}
+                        showFiatAmountForNonNearToken={false}
+                        testId={amountTestId}
+                    />
+                </div>
             </div>
         </Container>
     );
