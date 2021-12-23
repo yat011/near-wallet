@@ -62,7 +62,7 @@ export default () => {
     return (
         <StyledContainer>
             <div>
-                <div onClick={() => dispatch(push({ pathname: '/wrap/unwrap' }))} >
+                <div data-test-id="unwrapWNearBanner" onClick={() => dispatch(push({ pathname: '/wrap/unwrap' }))} >
                     <NearLogoAndPlusIcon />
                     <div>
                         <div className='title'><Translate id='wallet.unwrapWNear.title' /></div>

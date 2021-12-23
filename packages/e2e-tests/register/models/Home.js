@@ -13,8 +13,8 @@ class HomePage {
     async clickSendButton() {
         await this.page.click(`data-test-id=balancesTab.send`);
     }
-    async clickWrapButton() {
-        await this.page.click(`data-test-id=balancesTab.wrap`);
+    async clickUnwrapBannerButton() {
+        await this.page.click(`data-test-id=unwrapWNearBanner`);
     }
     async loginWithKeyPairLocalStorage(accountId, keyPair) {
         const serializedKeyPair = keyPair.toString();

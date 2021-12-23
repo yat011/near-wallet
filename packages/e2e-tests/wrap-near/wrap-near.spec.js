@@ -9,109 +9,202 @@ const { walletNetwork } = require("../utils/config");
 
 const { describe, beforeAll, afterAll } = test;
 
-describe("Wrapping NEAR tokens", () => {
-    let firstAccount;
+describe("wNEAR tokens", () => {
 
-    beforeAll(async () => {
-        const bankAccount = await getBankAccount();
-        firstAccount = bankAccount.spawnRandomSubAccountInstance();
-        await firstAccount.create();
-    });
-
-    afterAll(async () => {
-        await firstAccount.delete();
-    });
-
-    test("navigates to wrap near page", async ({ page }) => {
-        const firstAccountHomePage = new HomePage(page);
-
-        await firstAccountHomePage.navigate();
-
-        await firstAccountHomePage.loginWithSeedPhraseLocalStorage(firstAccount.accountId, firstAccount.seedPhrase);
-
-        await firstAccountHomePage.navigate();
-
-        await firstAccountHomePage.clickWrapButton();
-
-        await expect(firstAccountHomePage.page).toMatchURL(/wrap$/);
-    });
     describe("Wrapping wNEAR", () => {
-        test("is able to wrap NEAR to wNEAR", async ({ page }) => {
-            const firstAccountHomePage = new HomePage(page);
+        let account;
 
-            await firstAccountHomePage.navigate();
+        beforeAll(async () => {
+            const bankAccount = await getBankAccount();
+            account = bankAccount.spawnRandomSubAccountInstance();
+            await account.create();
+        });
 
-            await firstAccountHomePage.loginWithSeedPhraseLocalStorage(firstAccount.accountId, firstAccount.seedPhrase);
+        afterAll(async () => {
+            await account.delete();
+        });
+
+        test("navigates to wrap near page", async ({ page }) => {
+            const homePage = new HomePage(page);
+
+            await homePage.navigate();
+
+            await homePage.loginWithSeedPhraseLocalStorage(account.accountId, account.seedPhrase);
+
             const wrapNearPage = new WrapNearPage(page);
+            await wrapNearPage.navigate();
 
+            await expect(wrapNearPage.page).toMatchURL(/wrap$/);
+        });
+
+
+        test("is able to wrap NEAR to wNEAR", async ({ page }) => {
+            const homePage = new HomePage(page);
+
+            await homePage.navigate();
+
+            await homePage.loginWithSeedPhraseLocalStorage(account.accountId, account.seedPhrase);
 
             const wrapAmount = 0.1;
             const contractName = `wrap.${walletNetwork}`;
+            const beforeWNearBalance = new BN(await account.getFungibleTokenBalance(contractName));
 
-            const beforeWNearBalance = new BN(await firstAccount.getFungibleTokenBalance(contractName));
+
+            const wrapNearPage = new WrapNearPage(page);
             await wrapNearPage.navigate();
-
-            await wrapNearPage.waitForFromTokenBalance();
-            await wrapNearPage.typeAndSubmitAmount(wrapAmount);
-            await wrapNearPage.confirmTransaction();
+            await wrapOrUnWrapNear(wrapAmount, false, wrapNearPage);
 
             await expect(page).toMatchText("data-test-id=wrapNearTransactionSuccessMessage", new RegExp(`wrapped`));
             await expect(page).toMatchText("data-test-id=wrapNearTransactionSuccessMessage", new RegExp(`${wrapAmount} NEAR`));
             await expect(page).toMatchText("data-test-id=wrapNearTransactionSuccessMessage", new RegExp(`to ${wrapAmount} wNEAR`));
 
-
-            const afterWNearBalance = new BN(await firstAccount.getFungibleTokenBalance(contractName));
+            const afterWNearBalance = new BN(await account.getFungibleTokenBalance(contractName));
             const wrappedAmount = new BN(parseNearAmount(wrapAmount.toString()));
-
             expect(afterWNearBalance.eq(beforeWNearBalance.add(wrappedAmount))).toBe(true);
         });
     });
 
-    describe("Unwrapping wNEAR", () => {
-        let secondAccount;
+
+    describe("Unwrap wNEAR", () => {
+        let account;
         beforeAll(async () => {
             const bankAccount = await getBankAccount();
-            secondAccount = bankAccount.spawnRandomSubAccountInstance();
-            await secondAccount.create();
-            await secondAccount.wrapNear(parseNearAmount("0.5"));
+            account = bankAccount.spawnRandomSubAccountInstance();
+            await account.create();
+            await account.wrapNear(parseNearAmount("0.5"));
         });
 
         afterAll(async () => {
-            await secondAccount.delete();
+            await account.delete();
         });
 
-        test("is able to unwrap wNEAR tokens through clicking SwapToken button", async ({ page }) => {
-            const firstAccountHomePage = new HomePage(page);
+        test("is able to unwrap wNEAR tokens", async ({ page }) => {
+            const homePage = new HomePage(page);
 
-            await firstAccountHomePage.navigate();
+            await homePage.navigate();
 
-            await firstAccountHomePage.loginWithSeedPhraseLocalStorage(secondAccount.accountId, secondAccount.seedPhrase);
-            const wrapNearPage = new WrapNearPage(page);
+            await homePage.loginWithSeedPhraseLocalStorage(account.accountId, account.seedPhrase);
 
 
-            const wrapAmount = 0.2;
+
+            const wrapAmount = 0.5;
             const contractName = `wrap.${walletNetwork}`;
 
-            const beforeWNearBalance = new BN(await secondAccount.getFungibleTokenBalance(contractName));
+            const wrapNearPage = new WrapNearPage(page);
             await wrapNearPage.navigate();
-
-            await wrapNearPage.clickSwapTokenButton();
-            await wrapNearPage.waitForFromTokenBalance();
-            await wrapNearPage.typeAndSubmitAmount(wrapAmount);
-            await wrapNearPage.confirmTransaction();
+            const beforeWNearBalance = new BN(await account.getFungibleTokenBalance(contractName));
+            await wrapOrUnWrapNear(wrapAmount, true, wrapNearPage);
 
             await expect(page).toMatchText("data-test-id=wrapNearTransactionSuccessMessage", new RegExp(`unwrapped`));
             await expect(page).toMatchText("data-test-id=wrapNearTransactionSuccessMessage", new RegExp(`${wrapAmount} wNEAR`));
             await expect(page).toMatchText("data-test-id=wrapNearTransactionSuccessMessage", new RegExp(`to ${wrapAmount} NEAR`));
 
-
-            const afterWNearBalance = new BN(await secondAccount.getFungibleTokenBalance(contractName));
+            const afterWNearBalance = new BN(await account.getFungibleTokenBalance(contractName));
             const wrappedAmount = new BN(parseNearAmount(wrapAmount.toString()));
-
 
             expect(afterWNearBalance.eq(beforeWNearBalance.sub(wrappedAmount))).toBe(true);
         });
+
+
     });
 
 
+
+    describe("Unwrap wNEAR Banner", () => {
+        let account;
+        beforeAll(async () => {
+            const bankAccount = await getBankAccount();
+            account = bankAccount.spawnRandomSubAccountInstance();
+            await account.create();
+            await account.wrapNear(parseNearAmount("0.96"));
+        });
+
+        afterAll(async () => {
+            await account.delete();
+        });
+
+        test("navigates to unwrap near page (through banner)", async ({ page }) => {
+            const homePage = new HomePage(page);
+
+            await homePage.navigate();
+
+            await homePage.loginWithSeedPhraseLocalStorage(account.accountId, account.seedPhrase);
+
+            await homePage.navigate();
+            await homePage.clickUnwrapBannerButton();
+            await expect(homePage.page).toMatchURL(/wrap\/unwrap$/);
+        });
+
+        test("is able to unwrap near (through banner)", async ({ page }) => {
+            const homePage = new HomePage(page);
+
+            await homePage.navigate();
+
+            await homePage.loginWithSeedPhraseLocalStorage(account.accountId, account.seedPhrase);
+
+            await homePage.navigate();
+            await homePage.clickUnwrapBannerButton();
+            await expect(homePage.page).toMatchURL(/wrap\/unwrap$/);
+
+            const wrapAmount = 0.5;
+            const contractName = `wrap.${walletNetwork}`;
+
+            const wrapNearPage = new WrapNearPage(page);
+            const beforeWNearBalance = new BN(await account.getFungibleTokenBalance(contractName));
+            await wrapOrUnWrapNear(wrapAmount, false, wrapNearPage);
+
+
+            await expect(page).toMatchText("data-test-id=wrapNearTransactionSuccessMessage", new RegExp(`unwrapped`));
+            await expect(page).toMatchText("data-test-id=wrapNearTransactionSuccessMessage", new RegExp(`${wrapAmount} wNEAR`));
+            await expect(page).toMatchText("data-test-id=wrapNearTransactionSuccessMessage", new RegExp(`to ${wrapAmount} NEAR`));
+
+            const afterWNearBalance = new BN(await account.getFungibleTokenBalance(contractName));
+            const wrappedAmount = new BN(parseNearAmount(wrapAmount.toString()));
+            expect(afterWNearBalance.eq(beforeWNearBalance.sub(wrappedAmount))).toBe(true);
+        });
+
+
+    });
+
+
+    describe("Insufficient NEAR and wNEAR", () => {
+        let account;
+        beforeAll(async () => {
+            const bankAccount = await getBankAccount();
+            account = bankAccount.spawnRandomSubAccountInstance();
+            await account.create({ amount: "0.00200" });
+
+        });
+
+        afterAll(async () => {
+            await account.delete();
+        });
+
+        test("does not show Unwrap Banner", async ({ page }) => {
+            const homePage = new HomePage(page);
+
+            await homePage.navigate();
+
+            await homePage.loginWithSeedPhraseLocalStorage(account.accountId, account.seedPhrase);
+
+            await homePage.navigate();
+
+            await expect(homePage.page.locator("data-test-id=depositNearBanner")).toBeVisible();
+            await expect(homePage.page.locator("data-test-id=unwrapWNearBanner")).toHaveCount(0);
+        });
+
+
+    });
+
 });
+
+
+const wrapOrUnWrapNear = async (wrapAmount, clickSwapButton, wrapNearPage) => {
+    if (clickSwapButton) {
+        await wrapNearPage.clickSwapTokenButton();
+    }
+    await wrapNearPage.waitForFromTokenBalance();
+    await wrapNearPage.typeAndSubmitAmount(wrapAmount);
+    await wrapNearPage.confirmTransaction();
+    return wrapNearPage;
+}
