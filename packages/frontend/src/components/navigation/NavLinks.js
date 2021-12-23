@@ -74,25 +74,42 @@ const Container = styled.div`
     }
 `;
 
-const NavLinks = () => (
-    <Container className='nav-links'>
-        <NavLink exact to='/' activeClassName='selected' onClick={() => Mixpanel.track("Click Wallet button on nav")}>
-            <WalletIcon/>
-            <Translate id='link.wallet'/>
-        </NavLink>
-        <NavLink to='/staking' activeClassName='selected' onClick={() => Mixpanel.track("Click Staking button on nav")}>
-            <VaultIcon/>
-            <Translate id='link.staking'/>
-        </NavLink>
-        <NavLink to='/profile' className='account-details-link' activeClassName='selected' onClick={() => Mixpanel.track("Click Account button on nav")}>
-            <UserIcon/>
-            <Translate id='link.account'/>
-        </NavLink>
-        <a href='https://nearhelp.zendesk.com/' target='_blank' rel='noopener noreferrer' onClick={() => Mixpanel.track("Click Help button on nav")}>
-            <HelpIcon/>
-            <Translate id='link.help'/>
-        </a>
+
+const NavLinks = ({ items }) => {
+    if (items == null) {
+        items = getNavLinkItems();
+    }
+    return (<Container className='nav-links'>
+        {items}
     </Container>
-);
+    );
+
+};
+
+export const getNavLinkItems = () => {
+
+    return [
+        <NavLink key={1} exact to='/' activeClassName='selected' onClick={() => Mixpanel.track("Click Wallet button on nav")}>
+            <WalletIcon />
+            <Translate id='link.wallet' />
+        </NavLink>,
+        <NavLink key={2} to='/staking' activeClassName='selected' onClick={() => Mixpanel.track("Click Staking button on nav")}>
+            <VaultIcon />
+            <Translate id='link.staking' />
+        </NavLink>,
+        <NavLink key={3} to='/wrap' activeClassName='selected' onClick={() => Mixpanel.track("Click Staking button on nav")}>
+            <VaultIcon />
+            <Translate id='link.wrap' />
+        </NavLink>,
+        <NavLink key={4} to='/profile' className='account-details-link' activeClassName='selected' onClick={() => Mixpanel.track("Click Account button on nav")}>
+            <UserIcon />
+            <Translate id='link.account' />
+        </NavLink>,
+        <a href='https://nearhelp.zendesk.com/' key={5} target='_blank' rel='noopener noreferrer' onClick={() => Mixpanel.track("Click Help button on nav")}>
+            <HelpIcon />
+            <Translate id='link.help' />
+        </a>
+    ];
+}
 
 export default NavLinks;

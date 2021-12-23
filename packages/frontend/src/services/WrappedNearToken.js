@@ -89,7 +89,7 @@ export default class WrappedNearToken extends FungibleTokens {
 
 
     getEstimatedTotalFeesForWrapping = async ({ accountId }) => {
-        //TODO: missing gas price
+        //Currently follows the logic of sending token. The estimation is not accurate.
         if (!await this.isWrappedNearStorageBalanceAvailable({ accountId })) {
             return new BN(FT_STORAGE_DEPOSIT_GAS)
                 .add(new BN(FT_MINIMUM_STORAGE_BALANCE))

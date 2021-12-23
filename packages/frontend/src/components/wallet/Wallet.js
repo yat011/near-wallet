@@ -431,17 +431,6 @@ const FungibleTokens = ({ balance, tokensLoader, fungibleTokens }) => {
                 </FormButton>
                 <FormButton
                     color='dark-gray'
-                    linkTo='/wrap'
-                    trackingId='Click Wrap/UnWrap on Wallet page'
-                    data-test-id="balancesTab.wrap"
-                >
-                    <div>
-                        <TopUpIcon />
-                    </div>
-                    <Translate id='button.wrapNear' />
-                </FormButton>
-                <FormButton
-                    color='dark-gray'
                     linkTo='/buy'
                     trackingId='Click Receive on Wallet page'
                     data-test-id="balancesTab.buy"
