@@ -8,6 +8,7 @@ import HelpIcon from '../svg/HelpIcon';
 import UserIcon from '../svg/UserIcon';
 import VaultIcon from '../svg/VaultIcon';
 import WalletIcon from '../svg/WalletIcon';
+import WrapNearIcon from '../svg/WrapNearIcon';
 
 const Container = styled.div`
     display: flex;
@@ -100,7 +101,7 @@ export const getNavLinkItems = () => {
                 <Translate id='link.staking' />
             </NavLink>,
             <NavLink key={2} to='/wrap' activeClassName='selected' onClick={() => Mixpanel.track("Click Staking button on nav")}>
-                <VaultIcon />
+                <WrapNearIcon />
                 <Translate id='link.wrap' />
             </NavLink>,
             <NavLink key={3} to='/profile' className='account-details-link' activeClassName='selected' onClick={() => Mixpanel.track("Click Account button on nav")}>
