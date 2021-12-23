@@ -29,6 +29,8 @@ const Menu = styled.div`
     .nav-links {
         margin: 0 -16px;
         background-color: #FAFAFA;
+        flex-direction: column;
+
         a {
             padding: 17px 14px;
             border-top: 1px solid #efefef;
@@ -56,7 +58,6 @@ const LowerSection = styled.div`
 `;
 
 const MinorNavLinkContainer = styled.div`
-    flex-direction: column,
     display: block;
 `
 const DesktopMenu = ({

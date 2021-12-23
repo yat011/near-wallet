@@ -111,18 +111,14 @@ const DesktopContainer = (
     const showAllNavigationLinks = showNavLinks && !isInactiveAccount && !flowLimitationMainMenu;
 
     const [deviceWidth, setDeviceWidth] = useState(0);
+    const [navLinkItems, itemWidths] = getNavLinkItems();
+    const surroundingWidth = 550;
 
+    const spaceForNavlinks = deviceWidth - surroundingWidth;
 
-
-    const navLinkItems = getNavLinkItems();
-
-    const spaceForNavlinks = deviceWidth - 525;
-    const maxItemWidth = 120;
-    const numOfMajorItems = Math.min(Math.floor(spaceForNavlinks / maxItemWidth), navLinkItems.length);
-
+    const numOfMajorItems = getNumOfMajorItems(spaceForNavlinks, itemWidths);
     const majorNavLinkItems = navLinkItems.slice(0, numOfMajorItems);
     const minorNavLinkItems = navLinkItems.slice(numOfMajorItems);
-
 
     useLayoutEffect(() => {
         function updateWidth() {
@@ -133,11 +129,14 @@ const DesktopContainer = (
         return () => window.removeEventListener('resize', updateWidth);
     }, []);
 
+
+
+
     return (
         <Container>
             <Logo link={!flowLimitationMainMenu} />
             {showAllNavigationLinks &&
-                <MajorNavLinkContainer>
+                <MajorNavLinkContainer >
                     <NavLinks items={majorNavLinkItems} />
                 </MajorNavLinkContainer>
             }
@@ -170,6 +169,20 @@ const DesktopContainer = (
         </Container>
     );
 
+}
+
+
+const getNumOfMajorItems = (spaceForNavlinks, itemWidths) => {
+    let numOfItems = 0;
+    let sum = 0;
+    while (numOfItems < itemWidths.length) {
+        sum += itemWidths[numOfItems];
+        if (sum > spaceForNavlinks) {
+            break
+        }
+        numOfItems += 1;
+    }
+    return numOfItems;
 }
 
 export default DesktopContainer;
