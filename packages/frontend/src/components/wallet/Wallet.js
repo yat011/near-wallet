@@ -368,21 +368,13 @@ const FungibleTokens = ({ balance, tokensLoader, fungibleTokens }) => {
         return (contractName && contractName === WRAP_NEAR_CONTRACT_ID) || symbol === "wNEAR";
     });
     let wNearToken = null;
+    let showUnwrapNear = false;
+    const [unwrapFees, setUnwrapFees] = useState(null);
 
     if (wNearTokenIndex >= 0) {
         fungibleTokens = moveWNearHigherInTokenList({ fungibleTokens, wNearPos: wNearTokenIndex });
         wNearToken = fungibleTokens[1];
     }
-
-    let showUnwrapNear = false;
-    const [unwrapFees, setUnwrapFees] = useState(null);
-
-    useEffect(() => {
-        (async () => {
-            const fee = await wrappedNearTokenService.getEstimatedTotalFeesForUnWrapping();
-            setUnwrapFees(fee);
-        })();
-    }, []);
 
     if (availableBalanceIsZero && unwrapFees != null) {
         const haveEnoughWNear = wNearToken?.balance ? (new BN(wNearToken.balance)).gte(new BN(MIN_BALANCE_FOR_GAS)) : false;
@@ -390,7 +382,12 @@ const FungibleTokens = ({ balance, tokensLoader, fungibleTokens }) => {
         showUnwrapNear = availableBalanceIsZero && haveEnoughWNear && haveEnoughGasFeeForUnwrap;
     }
 
-
+    useEffect(() => {
+        (async () => {
+            const fee = await wrappedNearTokenService.getEstimatedTotalFeesForUnWrapping();
+            setUnwrapFees(fee);
+        })();
+    }, []);
 
     return (
         <>
