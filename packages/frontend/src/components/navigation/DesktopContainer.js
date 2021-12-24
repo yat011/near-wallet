@@ -107,16 +107,13 @@ const DesktopContainer = (
     }
 ) => {
 
-
     const showAllNavigationLinks = showNavLinks && !isInactiveAccount && !flowLimitationMainMenu;
 
-    const [deviceWidth, setDeviceWidth] = useState(0);
-    const [navLinkItems, itemWidths] = getNavLinkItems();
-    const surroundingWidth = 550;
+    const [deviceWidth, setDeviceWidth] = useState(960);
+    const navLinkItems = getNavLinkItems();
+    const majorNavLinkBreakpoints = [992, 992, 992, 1050, 1180];
 
-    const spaceForNavlinks = deviceWidth - surroundingWidth;
-
-    const numOfMajorItems = getNumOfMajorItems(spaceForNavlinks, itemWidths);
+    const numOfMajorItems = getNumOfMajorItems(deviceWidth, majorNavLinkBreakpoints);
     const majorNavLinkItems = navLinkItems.slice(0, numOfMajorItems);
     const minorNavLinkItems = navLinkItems.slice(numOfMajorItems);
 
@@ -172,13 +169,11 @@ const DesktopContainer = (
 }
 
 
-const getNumOfMajorItems = (spaceForNavlinks, itemWidths) => {
+const getNumOfMajorItems = (deviceWidth, breakpoints) => {
     let numOfItems = 0;
-    let sum = 0;
-    while (numOfItems < itemWidths.length) {
-        sum += itemWidths[numOfItems];
-        if (sum > spaceForNavlinks) {
-            break
+    while (numOfItems < breakpoints.length) {
+        if (deviceWidth < breakpoints[numOfItems]) {
+            break;
         }
         numOfItems += 1;
     }
