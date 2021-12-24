@@ -119,7 +119,7 @@ const DesktopContainer = (
 
     useLayoutEffect(() => {
         function updateWidth() {
-            setDeviceWidth(window.screen.width);
+            setDeviceWidth(window.innerWidth);
         }
         window.addEventListener('resize', updateWidth);
         updateWidth();

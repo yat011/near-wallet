@@ -30,11 +30,11 @@ describe("wNEAR tokens", () => {
             await homePage.navigate();
 
             await homePage.loginWithSeedPhraseLocalStorage(account.accountId, account.seedPhrase);
+            await homePage.navigate();
+            await page.click("div:visible.user-account");
+            await page.click("[data-test-id=wrapNearNavLink]:visible");
 
-            const wrapNearPage = new WrapNearPage(page);
-            await wrapNearPage.navigate();
-
-            await expect(wrapNearPage.page).toMatchURL(/wrap$/);
+            await expect(page).toMatchURL(/wrap$/);
         });
 
 

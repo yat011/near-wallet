@@ -99,7 +99,7 @@ export const getNavLinkItems = () => {
             <VaultIcon />
             <Translate id='link.staking' />
         </NavLink>,
-        <NavLink key={2} to='/wrap' activeClassName='selected' onClick={() => Mixpanel.track("Click Staking button on nav")}>
+        <NavLink key={2} to='/wrap' data-test-id="wrapNearNavLink" activeClassName='selected' onClick={() => Mixpanel.track("Click Staking button on nav")}>
             <WrapNearIcon />
             <Translate id='link.wrap' />
         </NavLink>,
